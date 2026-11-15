@@ -1,9 +1,17 @@
+
 from project import db, app
+
+
+def mask_data(value):
+    if value is None:
+        return None
+    return "*" * len(str(value))
 
 
 # Customer model
 class Customer(db.Model):
     __tablename__ = 'customers'
+
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True, index=True)
     city = db.Column(db.String(64))
@@ -19,10 +27,19 @@ class Customer(db.Model):
         self.pesel = pesel
         self.street = street
         self.appNo = appNo
-        print("Getting: " + str(self),flush=True)
+
+        print("Getting: " + str(self), flush=True)
 
     def __repr__(self):
-        return f"Customer(ID: {self.id}, Name: {self.name}, City: {self.city}, Age: {self.age}, Pesel: {self.pesel}, Street: {self.street}, AppNo: {self.appNo})"
+        return (
+            f"Customer(ID: {self.id}, "
+            f"Name: {'*' * len(self.name or '')}, "
+            f"City: {'*' * len(self.city or '')}, "
+            f"Age: {self.age}, "
+            f"Pesel: {'*' * len(self.pesel or '')}, "
+            f"Street: {'*' * len(self.street or '')}, "
+            f"AppNo: {'*' * len(self.appNo or '')})"
+        )
 
 
 with app.app_context():
